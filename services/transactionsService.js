@@ -12,11 +12,15 @@ exports.getAllOut = async () => {
 
 exports.getOutStat = async () => {
   let month = new Date().getMonth() + 1;
-  return await sequelize.query("SELECT date, SUM(price) " +
-    "FROM transactionsOut " +
-    "WHERE strftime('%m', date_trans)= `month` " +
-    "GROUP BY CAST(date AS Date) " +
-    "ORDER BY date DESC ", { type: QueryTypes.SELECT })
+  month = month < 10 ? 0 + '' + month : month;
+  return transactionsOutModel.sequelize.query("SELECT date, SUM(price) AS 'price_total' " +
+      "FROM transactionsOuts " +
+      "WHERE strftime('%m', date)= (:month) " +
+      "GROUP BY CAST(date AS Date) " +
+      "ORDER BY date DESC ", {
+    replacements: {month},
+    type: transactionsOutModel.sequelize.QueryTypes.SELECT
+  });
 };
 
 exports.addIn = async (id, weight) => {
