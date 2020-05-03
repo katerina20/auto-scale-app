@@ -1,0 +1,13 @@
+{
+    "dbConfig": {
+        "dbName": "supermarket",
+        "userName": "admin",
+        "password": "admin",
+        "host": "localhost",
+        "dialect": "sqlite",
+        "path": "db/data/database.sqlite"
+    },
+    "adminLogin": "admin",
+    "adminPassword": "admin",
+    "secret": "secretKey"
+}
