@@ -5,17 +5,20 @@ const path = require('path');
 const routes = require('./routes');
 const app = express();
 
-// app.use(express.static(path.join(__dirname, '../dist/front')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 
-// app.use((err, req, res) => {
-//   res.status(400);
-//   res.json({ ...err });
-// });
+router.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './client/build/index.html'), function(err) {
+        if (err) {
+            res.status(500).send(err)
+        }
+    });
+});
 
 app.listen(process.env.PORT || 4200);
 

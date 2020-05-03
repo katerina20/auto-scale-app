@@ -16,7 +16,7 @@ exports.substWeight = async (req, res, next) => {
 };
 
 exports.edit = async (req, res, next) => {
-  return res.json(await itemsService.edit());
+  return res.json(await itemsService.edit(req.body));
 };
 
 exports.getStatistic = async (req, res, next) => {
