@@ -1,13 +1,14 @@
 import React from 'react';
-import {Line} from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 const ChartComponent = (props) => {
     const {
         chartName,
+        legend,
         data,
+        statsItem
     } = props;
-
-    const legend = data.map(item => item.date_m);
+    console.log(statsItem);
 
     const dataChart = {
         labels: legend,
@@ -31,20 +32,20 @@ const ChartComponent = (props) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: data.map(item => item.weight_total)
+                data
             }
         ]
     };
 
     return (
         <div>
-            <h2>Item name</h2>
-            <Line style={{ width: 100, height: 100}}
+            <h2>{statsItem && statsItem.name}</h2>
+            <Line style={{ width: 100, height: 100 }}
                 data={dataChart}
                 options={{
-                responsive: true,
-                maintainAspectRatio: true,
-            }}/>
+                    responsive: true,
+                    maintainAspectRatio: true,
+                }} />
         </div>
     );
 };

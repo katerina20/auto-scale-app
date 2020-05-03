@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const DOMAIN = '/api';
+export const DOMAIN = 'http://localhost:4200/api';
 const instance = axios.create({ baseURL: DOMAIN });
 
 export const AuthApi = {

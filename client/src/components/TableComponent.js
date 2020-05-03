@@ -5,7 +5,8 @@ const TableComponent = (props) => {
     const {
         tableName,
         tableStructure,
-        updateItemCallback
+        updateItemCallback,
+        onTableRowClick
     } = props;
 
     const [state, setState] = React.useState(tableStructure);
@@ -20,7 +21,7 @@ const TableComponent = (props) => {
             title={tableName}
             columns={state.columns}
             data={state.data}
-            editable={{
+            editable={updateItemCallback && {
                 onRowUpdate: (newData, oldData) =>
                     new Promise((resolve) => {
                         setTimeout(() => {
@@ -36,6 +37,7 @@ const TableComponent = (props) => {
                         }, 600);
                     }),
             }}
+            onRowClick={onTableRowClick ? (event, rowData) => onTableRowClick(rowData.id) : null}
         />
     );
 };

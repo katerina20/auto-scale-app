@@ -3,10 +3,12 @@ import { ItemsApi } from '../api/DataAccessLayer';
 
 const SET_ITEMS = 'items/SET_ITEMS';
 const SET_STATS = 'items/SET_STATS';
+const SET_STATS_ITEM = 'items/SET_STATS_ITEM';
 
 const initialState = {
     items: [],
-    stats: []
+    stats: [],
+    statsItem: null
 };
 
 const itemsReducer = (state = initialState, action) => {
@@ -15,13 +17,18 @@ const itemsReducer = (state = initialState, action) => {
             return { ...state, items: action.items };
         case SET_STATS:
             return { ...state, stats: action.stats };
+        case SET_STATS_ITEM:
+            return { ...state, statsItem: action.statsItem };
         default:
             return state;
     }
 };
 
 export const setItems = (items) => ({ type: SET_ITEMS, items });
+
 export const setStats = (stats) => ({ type: SET_STATS, stats });
+
+export const setStatsItem = (statsItem) => ({ type: SET_STATS_ITEM, statsItem });
 
 export const getItems = () => async (dispatch, getState) => {
     try {
@@ -43,13 +50,18 @@ export const getItems = () => async (dispatch, getState) => {
     }
 };
 
-export const addSupply = (item, weight) => async (dispatch, getState) => {
+export const addSupply = (item, amount) => async (dispatch, getState) => {
     try {
-        let res = await ItemsApi.addSupply(item, weight, getState().auth.authToken);
+        const items = getState().items.items;
+        const itemIndex = items.findIndex(i => i.id === item.id);
+        if (itemIndex < 0) return alert('Something wrong');
+
+        let res = await ItemsApi.addSupply(item, +amount, getState().auth.authToken);
         console.log(res);
         res = res.data;
-        // TODO: find and update item
-        // dispatch(setItems(res));
+        const newItem = items[itemIndex];
+        newItem.amount = +newItem.amount + +amount;
+        dispatch(setItems([...items.slice(0, itemIndex), newItem, ...items.slice(itemIndex + 1)]));
     } catch (err) {
         if (!err.response) {
             return alert('Server connection error');
@@ -73,18 +85,15 @@ export const updateItem = (item) => async (dispatch, getState) => {
         if (itemIndex < 0 || providerIndex < 0) {
             return alert('Something wrong');
         }
-        debugger;
         const newItem = items[itemIndex];
         newItem.price = +item.price;
         newItem.amount = +item.amount;
         newItem.providerId = +item.providerId;
         newItem.provider = providers[providerIndex];
 
-        debugger;
         let res = await ItemsApi.updateItem(item, getState().auth.authToken);
         console.log(res);
         res = res.data;
-        debugger;
         dispatch(setItems([...items.slice(0, itemIndex), newItem, ...items.slice(itemIndex + 1)]));
     } catch (err) {
         if (!err.response) {
@@ -105,7 +114,13 @@ export const getStats = (itemId) => async (dispatch, getState) => {
         let res = await ItemsApi.getItemStatsById(itemId, getState().auth.authToken);
         console.log(res);
         res = res.data;
+
+        const items = getState().items.items;
+        const index = items.findIndex(i => i.id === itemId);
+        if (index < 0) return alert('Server connection error');
+
         dispatch(setStats(res));
+        dispatch(setStatsItem(items[index]));
     } catch (err) {
         if (!err.response) {
             return alert('Server connection error');

@@ -1,29 +1,35 @@
 import Cookies from 'universal-cookie';
-import { ProvidersApi } from '../api/DataAccessLayer';
+import { TransactionsApi } from '../api/DataAccessLayer';
 
-const SET_PROVIDERS = 'providers/SET_PROVIDERS';
+const SET_TRANSACTIONS = 'transactions/SET_TRANSACTIONS';
+const SET_STATS_TRANSACTIONS = 'transactions/SET_STATS_TRANSACTIONS';
 
 const initialState = {
-    providers: []
+    transactions: [],
+    statsTransactions: []
 };
 
 const providersReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_PROVIDERS:
-            return { ...state, providers: action.providers };
+        case SET_TRANSACTIONS:
+            return { ...state, transactions: [...action.transactions] };
+        case SET_STATS_TRANSACTIONS:
+            return { ...state, statsTransactions: action.statsTransactions };
         default:
             return state;
     }
 };
 
-export const setProviders = (providers) => ({ type: SET_PROVIDERS, providers });
+export const setTransactions = (transactions) => ({ type: SET_TRANSACTIONS, transactions });
 
-export const getProviders = () => async (dispatch, getState) => {
+export const setStatsTransactions = (statsTransactions) => ({ type: SET_STATS_TRANSACTIONS, statsTransactions });
+
+export const getAllInTransactionsFromApi = () => async (dispatch, getState) => {
     try {
-        let res = await ProvidersApi.getAllProviders(getState().auth.authToken);
+        let res = await TransactionsApi.getAllInTransactions(getState().auth.authToken);
         console.log(res);
         res = res.data;
-        dispatch(setProviders(res));
+        dispatch(setTransactions(res));
     } catch (err) {
         if (!err.response) {
             return alert('Server connection error');
@@ -38,12 +44,12 @@ export const getProviders = () => async (dispatch, getState) => {
     }
 };
 
-export const addProvider = (provider) => async (dispatch, getState) => {
+export const getAllOutTransactionsFromApi = () => async (dispatch, getState) => {
     try {
-        let res = await ProvidersApi.addProvider(provider, getState().auth.authToken);
+        let res = await TransactionsApi.getAllOutTransactions(getState().auth.authToken);
         console.log(res);
         res = res.data;
-        dispatch(setProviders([...getState().providers.providers, res]));
+        dispatch(setTransactions(res));
     } catch (err) {
         if (!err.response) {
             return alert('Server connection error');
@@ -58,15 +64,12 @@ export const addProvider = (provider) => async (dispatch, getState) => {
     }
 };
 
-export const updateProvider = (provider) => async (dispatch, getState) => {
+export const getTransactionsStatsFromApi = () => async (dispatch, getState) => {
     try {
-        let res = await ProvidersApi.updateProvider(provider, getState().auth.authToken);
+        let res = await TransactionsApi.getTransactionsStats(getState().auth.authToken);
         console.log(res);
         res = res.data;
-        const providers = [...getState().providers.providers];
-        const index = providers.findIndex(pr => pr.id === provider.id);
-        if (index < 0) return alert('Something wrong');
-        dispatch(setProviders([...providers.slice(0, index), provider, ...providers.slice(index + 1)]));
+        dispatch(setStatsTransactions(res));
     } catch (err) {
         if (!err.response) {
             return alert('Server connection error');

@@ -6,9 +6,9 @@ exports.getAll = async () => {
 };
 
 exports.add = async (provider) => {
-  return providersModel.create({
-    ...provider
-  });
+  console.log(provider);
+  const newProvider = await providersModel.create(provider.provider);
+  return newProvider;
 };
 
 exports.edit = async (provider) => {
@@ -16,5 +16,9 @@ exports.edit = async (provider) => {
     name: provider.name,
     phone: provider.phone,
     address: provider.address
+  }, {
+    where: {
+      id: provider.id
+    }
   });
 };

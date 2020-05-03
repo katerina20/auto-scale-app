@@ -15,6 +15,8 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
 import ItemsPageContainer from '../items/ItemsPageContainer';
+import ProvidersPageContainer from '../providers/ProvidersPageContainer';
+import SalesPageContainer from '../sales/SalesPageContainer';
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -139,10 +141,10 @@ const MainPage = (props) => {
                         <ItemsPageContainer />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        Hello 2
+                        <ProvidersPageContainer />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        Hello 3
+                        <SalesPageContainer />
                     </TabPanel>
                 </Paper>
             </Container>
