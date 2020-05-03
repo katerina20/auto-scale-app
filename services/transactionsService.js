@@ -13,10 +13,10 @@ exports.getAllOut = async () => {
 exports.getOutStat = async () => {
   let month = new Date().getMonth() + 1;
   month = month < 10 ? 0 + '' + month : month;
-  return transactionsOutModel.sequelize.query("SELECT date, SUM(price) AS 'price_total' " +
+  return transactionsOutModel.sequelize.query("SELECT DATE(date) AS date_m, SUM(price) AS 'price_total' " +
       "FROM transactionsOuts " +
       "WHERE strftime('%m', date)= (:month) " +
-      "GROUP BY CAST(date AS Date) " +
+      "GROUP BY date_m " +
       "ORDER BY date DESC ", {
     replacements: {month},
     type: transactionsOutModel.sequelize.QueryTypes.SELECT

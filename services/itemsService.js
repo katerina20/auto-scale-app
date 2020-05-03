@@ -38,11 +38,11 @@ exports.edit = async (item) => {
 };
 
 exports.getStatistic = async (id) => {
-  return transactionsOutModel.sequelize.query("SELECT date, SUM(weight) AS 'weight_total'" +
+  return transactionsOutModel.sequelize.query("SELECT DATE(date) AS date_m, SUM(weight) AS 'weight_total'" +
     "FROM transactionsOuts " +
     "WHERE itemId = (:id) " +
-    "GROUP BY CAST(date AS Date) " +
-    "ORDER BY date DESC " +
+    "GROUP BY date_m " +
+    "ORDER BY date " +
     "LIMIT 10", {
     replacements: {id},
     type: transactionsOutModel.sequelize.QueryTypes.SELECT })
