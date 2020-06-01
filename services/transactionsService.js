@@ -3,7 +3,7 @@ const transactionsInModel = models.transactionsIns;
 const transactionsOutModel = models.transactionsOuts;
 
 exports.getAllIn = async () => {
-  return transactionsInModel.findOne();
+  return transactionsInModel.findAll();
 };
 
 exports.getAllOut = async () => {

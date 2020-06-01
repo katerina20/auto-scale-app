@@ -8,8 +8,6 @@ exports.getAll = async () => {
 };
 
 exports.addWeight = async (item, weight) => {
-  console.log(item.amount + weight);
-  console.log(item.amount + weight);
   return await itemModel.update({amount: item.amount + weight}, {
     where: {
       id: item.id
